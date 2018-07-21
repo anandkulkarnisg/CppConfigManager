@@ -22,6 +22,12 @@ int main(int argc, char* argv[])
 	double configItem = reader.getDoubleValue("HelloConfig", 100.123);
 	std::cout << "Double configuration HelloConfig = " << configItem << std::endl;
 
+	// Case 2 : Try and invalid / non existing config file.
+	CppXMLConfigReader invalidReader("tiko.xml", "DoesNotExist", "root");
+	invalidReader.init();
+
+	std::cout << invalidReader.isConfigValid() << std::endl;
+
 	return(0);
 }
 
