@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+   <ApplicationSettings executionMode = "Threaded" 
+						displayMode = "false" 
+						cycleSleepDurationMilliSecs = "10" 
+						maxTickLimit = "1000" 
+						kdbServer = "localhost" 
+						kdbPort = "5000" 
+						KdbPublishThreads = "3" 
+						resultWriterDestination = "KDB" 
+						queueCapacityAdjFactor = "0.5"
+	> 
+   </ApplicationSettings>
+   <OtherStuff option_x = "500" > </OtherStuff>
+</root>

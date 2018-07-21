@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rm -f *.o
+
+CFLAGS=$1
+LIBRARY=xerces-c
+
+for item in $(ls *.cpp)
+do
+	g++ $CFLAGS -c $item
+done
+
+# First build the XMLConfigExample binary. 
+g++ $CFLAGS XMLConfigExample.cpp XMLConfig.o -o XMLConfigExample -l$LIBRARY
+
+# Build the second binary.
+g++ $CFLAGS CppXMLConfigReader.o ConfigReaderExample.o XMLConfig.o -o ConfigReaderExample -l$LIBRARY 
