@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	}
 	std::cout << "size of the map = " << mapItems.size() << std::endl;	
 
-	// Case 2 : An invalid case of a no existing file.
+	// Case 2 : An invalid case of a non existing file.
 	XMLConfig configManager2("tiko.xml", "ApplicationSettings", "root");
 	try
 	{		
