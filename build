@@ -2,22 +2,27 @@
 
 rm -f *.o
 
+# Step 1 : build the C++ .o files required by the library.
+
 CFLAGS=$1
 LIBRARY=xerces-c
 
 for item in $(ls *.cpp)
 do
-	g++ $CFLAGS -c $item
+	g++ $CFLAGS -c -fPIC -shared $item
 done
 
+# Step 2 : build the shared library required by the binaries/examples.
+g++ -fPIC -shared XMLConfig.o CppXMLConfigReader.o -o libCppConfigManager.so -lxerces-c
+
 # First build the XMLConfigExample binary. 
-g++ $CFLAGS XMLConfigExample.cpp XMLConfig.o -o XMLConfigExample -l$LIBRARY
+g++ XMLConfigExample.cpp -o XMLConfigExample -lxerces-c -L. -lCppConfigManager
 
 # Build the second binary.
-g++ $CFLAGS CppXMLConfigReader.o ConfigReaderExample.o XMLConfig.o -o ConfigReaderExample -l$LIBRARY 
+g++ ConfigReaderExample.cpp -o ConfigReaderExample -lxerces-c -L. -lCppConfigManager
 
 # Build the third binary.
-g++ $CFLAGS OtherStuff.o CppXMLConfigReader.o XMLConfig.o -o OtherStuffExample -l$LIBRARY
+g++ OtherStuff.cpp -o OtherStuff -lxerces-c -L. -lCppConfigManager
 
 # Build the fourth binary.
-g++ $CFLAGS SampleTest.o CppXMLConfigReader.o XMLConfig.o -o SampleTest -l$LIBRARY 
+g++ SampleTest.cpp -o SampleTest -lxerces-c -L. -lCppConfigManager
