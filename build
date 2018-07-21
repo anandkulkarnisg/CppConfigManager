@@ -1,9 +1,8 @@
 #!/bin/bash
 
-rm -f *.o
+rm -f *.o *.so XMLConfigExample ConfigReaderExample OtherStuff SampleTest
 
 # Step 1 : build the C++ .o files required by the library.
-
 CFLAGS=$1
 LIBRARY=xerces-c
 
@@ -15,14 +14,12 @@ done
 # Step 2 : build the shared library required by the binaries/examples.
 g++ -fPIC -shared XMLConfig.o CppXMLConfigReader.o -o libCppConfigManager.so -lxerces-c
 
-# First build the XMLConfigExample binary. 
-g++ XMLConfigExample.cpp -o XMLConfigExample -lxerces-c -L. -lCppConfigManager
+# Step 3 : Build the code examples below using the new libraries.
+declare -a exampleCodeList=("XMLConfigExample.cpp" "ConfigReaderExample.cpp" "OtherStuff.cpp" "SampleTest.cpp")
+libOptions="-lxerces-c -L. -lCppConfigManager"
+for iterator in "${exampleCodeList[@]}"
+do
+   binaryItem=${iterator%.cpp}
+   g++ $iterator -o $binaryItem $libOptions	
+done
 
-# Build the second binary.
-g++ ConfigReaderExample.cpp -o ConfigReaderExample -lxerces-c -L. -lCppConfigManager
-
-# Build the third binary.
-g++ OtherStuff.cpp -o OtherStuff -lxerces-c -L. -lCppConfigManager
-
-# Build the fourth binary.
-g++ SampleTest.cpp -o SampleTest -lxerces-c -L. -lCppConfigManager
