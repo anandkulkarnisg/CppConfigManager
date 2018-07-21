@@ -16,5 +16,8 @@ g++ $CFLAGS XMLConfigExample.cpp XMLConfig.o -o XMLConfigExample -l$LIBRARY
 # Build the second binary.
 g++ $CFLAGS CppXMLConfigReader.o ConfigReaderExample.o XMLConfig.o -o ConfigReaderExample -l$LIBRARY 
 
-# Build the third library.
+# Build the third binary.
 g++ $CFLAGS OtherStuff.o CppXMLConfigReader.o XMLConfig.o -o OtherStuffExample -l$LIBRARY
+
+# Build the fourth binary.
+g++ $CFLAGS SampleTest.o CppXMLConfigReader.o XMLConfig.o -o SampleTest -l$LIBRARY 
