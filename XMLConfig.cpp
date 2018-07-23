@@ -63,60 +63,60 @@ void XMLConfig::readConfigFile()
 	}
 
 	// Configure DOM parser.
-    m_ConfigFileParser->setValidationScheme( XercesDOMParser::Val_Never );
-    m_ConfigFileParser->setDoNamespaces( false );
-    m_ConfigFileParser->setDoSchema( false );
-    m_ConfigFileParser->setLoadExternalDTD( false );
+	m_ConfigFileParser->setValidationScheme( XercesDOMParser::Val_Never );
+	m_ConfigFileParser->setDoNamespaces( false );
+	m_ConfigFileParser->setDoSchema( false );
+	m_ConfigFileParser->setLoadExternalDTD( false );
 
-    try
-    {
-        m_ConfigFileParser->parse(m_InputConfigFileName.c_str());
+	try
+	{
+		m_ConfigFileParser->parse(m_InputConfigFileName.c_str());
 
-        // no need to free this pointer - owned by the parent parser object
-        DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
+		// no need to free this pointer - owned by the parent parser object
+		DOMDocument* xmlDoc = m_ConfigFileParser->getDocument();
 
-        // Get the top-level element: NAme is "root". No attributes for "root"
+		// Get the top-level element: NAme is "root". No attributes for "root"
 
-        DOMElement* elementRoot = xmlDoc->getDocumentElement();
-        if( !elementRoot ) throw(std::runtime_error( "empty XML document" ));
+		DOMElement* elementRoot = xmlDoc->getDocumentElement();
+		if( !elementRoot ) throw(std::runtime_error( "empty XML document" ));
 
-        // Parse XML file for tags of interest: "ApplicationSettings"
-        // Look one level nested within "root". (child of root)
+		// Parse XML file for tags of interest: "ApplicationSettings"
+		// Look one level nested within "root". (child of root)
 
-        DOMNodeList*      children = elementRoot->getChildNodes();
-        const  XMLSize_t nodeCount = children->getLength();
+		DOMNodeList*      children = elementRoot->getChildNodes();
+		const  XMLSize_t nodeCount = children->getLength();
 
-        // For all nodes, children of "root" in the XML tree.
-		
-		        for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
-        {
-            DOMNode* currentNode = children->item(xx);
-            if(XMLString::equals(currentNode->getNodeName(), TAG_ApplicationSettings))
-            {
-                if( currentNode->getNodeType() &&  // true is not NULL
-                        currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element 
-                {
-                    // First traverse and print all values/names pairs.
-                    DOMNamedNodeMap* map = currentNode->getAttributes();
-                    int i, len = map ? map->getLength() : 0;
-                    for (i=0; i<len; ++i)
-                    {
-                        DOMNode *attr = map->item(i);
-                        const XMLCh* xmlch_nodeName = attr->getNodeName();
-                        const XMLCh* xmlch_nodeValue = attr->getNodeValue();
+		// For all nodes, children of "root" in the XML tree.
+
+		for( XMLSize_t xx = 0; xx < nodeCount; ++xx )
+		{
+			DOMNode* currentNode = children->item(xx);
+			if(XMLString::equals(currentNode->getNodeName(), TAG_ApplicationSettings))
+			{
+				if( currentNode->getNodeType() &&  // true is not NULL
+						currentNode->getNodeType() == DOMNode::ELEMENT_NODE ) // is element 
+				{
+					// First traverse and print all values/names pairs.
+					DOMNamedNodeMap* map = currentNode->getAttributes();
+					int i, len = map ? map->getLength() : 0;
+					for (i=0; i<len; ++i)
+					{
+						DOMNode *attr = map->item(i);
+						const XMLCh* xmlch_nodeName = attr->getNodeName();
+						const XMLCh* xmlch_nodeValue = attr->getNodeValue();
 						m_InternalMap[XMLString::transcode(xmlch_nodeName)] = XMLString::transcode(xmlch_nodeValue); 
-                    }
-                }
-            }
-        }
-    }
-    catch( xercesc::XMLException& e )
-    {
-        char* message = xercesc::XMLString::transcode( e.getMessage() );
-        ostringstream errBuf;
-        errBuf << "Error parsing file: " << message << flush;
-        XMLString::release( &message );
-    }
+					}
+				}
+			}
+		}
+	}
+	catch( xercesc::XMLException& e )
+	{
+		char* message = xercesc::XMLString::transcode( e.getMessage() );
+		ostringstream errBuf;
+		errBuf << "Error parsing file: " << message << flush;
+		XMLString::release( &message );
+	}
 }
 
 // Indicates if the map is empty and indicates validity if the map has elements.
@@ -138,29 +138,27 @@ XMLConfig::~XMLConfig()
 	// This is critical. Leaving to expire at the end causes segmentation fault. Seems all cleanup should be done before shutting down the Parser via XMLPlatformUtils::Terminate().
 	m_ConfigFileParser.reset();	
 
-    // Free memory
-    try
-    {
-        XMLString::release( &TAG_root );
-        XMLString::release( &TAG_ApplicationSettings );
-    }
-    catch( ... )
-    {
-        cerr << "Unknown exception encountered in TagNamesdtor" << endl;
-    }
+	// Free memory
+	try
+	{
+		XMLString::release( &TAG_root );
+		XMLString::release( &TAG_ApplicationSettings );
+	}
+	catch( ... )
+	{
+		cerr << "Unknown exception encountered in TagNamesdtor" << endl;
+	}
 
-    // Terminate Xerces
-    try
-    {
-        XMLPlatformUtils::Terminate();  // Terminate after release of memory
-    }
-    catch( xercesc::XMLException& e )
-    {
-        char* message = xercesc::XMLString::transcode( e.getMessage() );
-        cerr << "XML ttolkit teardown error: " << message << endl;
-        XMLString::release( &message );
-    }
+	// Terminate Xerces
+	try
+	{
+		XMLPlatformUtils::Terminate();  // Terminate after release of memory
+	}
+	catch( xercesc::XMLException& e )
+	{
+		char* message = xercesc::XMLString::transcode( e.getMessage() );
+		cerr << "XML ttolkit teardown error: " << message << endl;
+		XMLString::release( &message );
+	}
 }
-
-
 
