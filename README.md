@@ -3,6 +3,5 @@ Impementation of a Config parser for C++ Applications using xerces-c Library Imp
 The library helps to quickly implement config for applications.
 
 To build just run the below.
-./build 
+cmake CMakeLists.txt
 
-We still need to move this to make based build system.
