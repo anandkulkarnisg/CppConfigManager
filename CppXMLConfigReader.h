@@ -6,8 +6,6 @@
 
 #include "XMLConfig.h"
 
-using namespace std;
-
 class CppXMLConfigReader
 {
   private:

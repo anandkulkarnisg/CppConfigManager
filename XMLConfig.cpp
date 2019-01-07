@@ -15,7 +15,7 @@ using namespace xercesc;
 using namespace std;
 
 // The default and only constructor available is implemented below.
-XMLConfig::XMLConfig(const std::string& inputConfigFileName, const std::string& applicationSettings, const std::string& rootSectionName) 
+XMLConfig::XMLConfig(const string& inputConfigFileName, const string& applicationSettings, const string& rootSectionName) 
   : m_InputConfigFileName(inputConfigFileName) , 
   m_ApplicationSettings(applicationSettings) ,
   m_rootSectionName(rootSectionName)
@@ -27,7 +27,7 @@ XMLConfig::XMLConfig(const std::string& inputConfigFileName, const std::string& 
   catch( XMLException& e )
   {
     char* message = XMLString::transcode( e.getMessage() );
-    std::cout << "XML toolkit initialization error: " << message << std::endl;
+    cout << "XML toolkit initialization error: " << message << endl;
     XMLString::release( &message );
   }
 
@@ -36,7 +36,7 @@ XMLConfig::XMLConfig(const std::string& inputConfigFileName, const std::string& 
 
   TAG_root = XMLString::transcode(m_rootSectionName.c_str());
   TAG_ApplicationSettings = XMLString::transcode(m_ApplicationSettings.c_str());
-  m_ConfigFileParser = std::unique_ptr<xercesc::XercesDOMParser>(new XercesDOMParser);
+  m_ConfigFileParser = make_unique<xercesc::XercesDOMParser>(); 
 }
 
 // The readConfigFile Method implements reading from the supplied config file name. It parsers through the XML document and only initializes the map with key / values from the 
@@ -51,15 +51,15 @@ void XMLConfig::readConfigFile()
   if(stat(m_InputConfigFileName.c_str(), &fileStatus) == -1) // ==0 ok; ==-1 error
   {
     if( errno == ENOENT )      // errno declared by include file errno.h
-      throw ( std::runtime_error("Path file_name does not exist, or path is an empty string.") );
+      throw ( runtime_error("Path file_name does not exist, or path is an empty string.") );
     else if( errno == ENOTDIR )
-      throw ( std::runtime_error("A component of the path is not a directory."));
+      throw ( runtime_error("A component of the path is not a directory."));
     else if( errno == ELOOP )
-      throw ( std::runtime_error("Too many symbolic links encountered while traversing the path."));
+      throw ( runtime_error("Too many symbolic links encountered while traversing the path."));
     else if( errno == EACCES )
-      throw ( std::runtime_error("Permission denied."));
+      throw ( runtime_error("Permission denied."));
     else if( errno == ENAMETOOLONG )
-      throw ( std::runtime_error("File can not be read\n"));
+      throw ( runtime_error("File can not be read\n"));
   }
 
   // Configure DOM parser.
@@ -78,7 +78,7 @@ void XMLConfig::readConfigFile()
     // Get the top-level element: NAme is "root". No attributes for "root"
 
     DOMElement* elementRoot = xmlDoc->getDocumentElement();
-    if( !elementRoot ) throw(std::runtime_error( "empty XML document" ));
+    if( !elementRoot ) throw(runtime_error( "empty XML document" ));
 
     // Parse XML file for tags of interest: "ApplicationSettings"
     // Look one level nested within "root". (child of root)
@@ -134,7 +134,7 @@ bool XMLConfig::isConfigValid()
 }
 
 // Return The map to the end user if required.
-std::map<std::string, std::string> XMLConfig::getConfigMap()
+map<string, string> XMLConfig::getConfigMap()
 {
   return(m_InternalMap);	
 }

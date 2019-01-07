@@ -3,10 +3,10 @@
 using namespace std;
 
 // Constructor.
-CppXMLConfigReader::CppXMLConfigReader(const std::string& configFileName, const std::string& applicationSettingsName, const std::string& rootSectionName)
+CppXMLConfigReader::CppXMLConfigReader(const string& configFileName, const string& applicationSettingsName, const string& rootSectionName)
 {
-	std::unique_ptr<XMLConfig> mPtr= std::unique_ptr<XMLConfig>(new XMLConfig(configFileName, applicationSettingsName, rootSectionName));
-	m_XMLConfigManager = std::move(mPtr);
+  unique_ptr<XMLConfig> mPtr=make_unique<XMLConfig>(configFileName, applicationSettingsName, rootSectionName);
+	m_XMLConfigManager = move(mPtr);
 }
 
 // Initialize the config reader here.
@@ -16,9 +16,9 @@ void CppXMLConfigReader::init()
 	{
 		m_XMLConfigManager->readConfigFile();
 	}
-	catch(const std::runtime_error& error)
+	catch(const runtime_error& error)
 	{
-		std::cout << "Failed to initialize the XMLConfigManager. The error is = " << error.what() << std::endl;	
+		cout << "Failed to initialize the XMLConfigManager. The error is = " << error.what() << endl;	
 	}
 
 	if(m_XMLConfigManager->isConfigValid())
@@ -33,13 +33,13 @@ bool CppXMLConfigReader::isConfigValid()
 	return(m_XMLConfigManager->isConfigValid());	
 }
 
-std::map<std::string, std::string> CppXMLConfigReader::getConfigMap()
+map<string, string> CppXMLConfigReader::getConfigMap()
 {
 	return(m_configMapItems);
 }
 
 // All the specific config type returners implemented here.
-int CppXMLConfigReader::getIntValue(const std::string& key, const int& defaultVal) const
+int CppXMLConfigReader::getIntValue(const string& key, const int& defaultVal) const
 {
 	int returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
@@ -47,17 +47,17 @@ int CppXMLConfigReader::getIntValue(const std::string& key, const int& defaultVa
 	{
 		try
 		{
-			returnVal = std::stoi(iter->second);	
+			returnVal = stoi(iter->second);	
 		}
-		catch(const std::invalid_argument& e)
+		catch(const invalid_argument& e)
 		{
-			std::cout << "Exception happened while converting " << iter->second << " Into an integer value." << std::endl;
+			cout << "Exception happened while converting " << iter->second << " Into an integer value." << endl;
 		}
 	}
 	return(returnVal);
 }
 
-long CppXMLConfigReader::getLongValue(const std::string& key, const long& defaultVal) const
+long CppXMLConfigReader::getLongValue(const string& key, const long& defaultVal) const
 {
 	long returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
@@ -65,17 +65,17 @@ long CppXMLConfigReader::getLongValue(const std::string& key, const long& defaul
 	{
 		try
 		{
-			returnVal = std::stol(iter->second);
+			returnVal = stol(iter->second);
 		}
-		catch(const std::invalid_argument& e)
+		catch(const invalid_argument& e)
 		{
-			std::cout << "Exception happened while converting " << iter->second << " Into a long value." << std::endl;
+			cout << "Exception happened while converting " << iter->second << " Into a long value." << endl;
 		}
 	}
 	return(returnVal);
 }
 
-float CppXMLConfigReader::getFloatValue(const std::string& key, const float& defaultVal) const
+float CppXMLConfigReader::getFloatValue(const string& key, const float& defaultVal) const
 {
 	float returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
@@ -83,17 +83,17 @@ float CppXMLConfigReader::getFloatValue(const std::string& key, const float& def
 	{
 		try
 		{
-			returnVal = std::stof(iter->second);
+			returnVal = stof(iter->second);
 		}
-		catch(const std::invalid_argument& e)
+		catch(const invalid_argument& e)
 		{
-			std::cout << "Exception happened while converting " << iter->second << " Into an float value." << std::endl;
+			cout << "Exception happened while converting " << iter->second << " Into an float value." << endl;
 		}
 	}
 	return(returnVal);
 }
 
-double CppXMLConfigReader::getDoubleValue(const std::string& key, const double& defaultVal) const
+double CppXMLConfigReader::getDoubleValue(const string& key, const double& defaultVal) const
 {
 	double returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
@@ -101,17 +101,17 @@ double CppXMLConfigReader::getDoubleValue(const std::string& key, const double& 
 	{
 		try
 		{
-			returnVal = std::stod(iter->second);
+			returnVal = stod(iter->second);
 		}
-		catch(const std::invalid_argument& e)
+		catch(const invalid_argument& e)
 		{
-			std::cout << "Exception happened while converting " << iter->second << " Into an double value." << std::endl;
+			cout << "Exception happened while converting " << iter->second << " Into an double value." << endl;
 		}
 	}
 	return(returnVal);
 }
 
-bool CppXMLConfigReader::getBoolValue(const std::string& key, const bool& defaultVal) const
+bool CppXMLConfigReader::getBoolValue(const string& key, const bool& defaultVal) const
 {
 	bool returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
@@ -125,9 +125,9 @@ bool CppXMLConfigReader::getBoolValue(const std::string& key, const bool& defaul
 	return(returnVal);
 }
 
-std::string CppXMLConfigReader::getStringValue(const std::string& key, const std::string& defaultVal) const
+string CppXMLConfigReader::getStringValue(const string& key, const string& defaultVal) const
 {
-	std::string returnVal = defaultVal;
+	string returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
 	if( iter != m_configMapItems.end())
 	{
