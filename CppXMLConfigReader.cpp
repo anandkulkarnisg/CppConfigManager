@@ -127,12 +127,8 @@ bool CppXMLConfigReader::getBoolValue(const string& key, const bool& defaultVal)
 
 string CppXMLConfigReader::getStringValue(const string& key, const string& defaultVal) const
 {
-	string returnVal = defaultVal;
 	auto iter = m_configMapItems.find(key.c_str());
-	if( iter != m_configMapItems.end())
-	{
-		returnVal = iter->second;
-		return(returnVal);	
-	}
-	return(returnVal);
+	if(iter != m_configMapItems.end())
+		return(iter->second);
+	return(defaultVal);
 }
